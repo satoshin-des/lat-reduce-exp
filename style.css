@@ -1,0 +1,42 @@
+a:link {
+    color: #b8f0ff;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #9eb8ff;
+    text-decoration: underline;
+}
+
+body {
+    background-color: #000000;
+}
+
+p {
+    color: #ffffff;
+}
+
+h1 {
+    color: #ffffff;
+}
+
+h2 {
+    color: #ffffff;
+}
+
+h3 {
+    color: #ffffff;
+}
+
+ul {
+    color: #ffffff;
+}
+
+th {
+    color: #ffffff;
+}
+
+video {
+    width: 92%;
+    max-width: 400px;
+}
