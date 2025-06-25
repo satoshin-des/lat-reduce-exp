@@ -14,12 +14,12 @@ class Lattice {
         this.basis = new Array(nrows);
         this.mu = new Array(nrows);
         this.gsoMat = new Array(nrows);
-        this.B = new Array(nrows).fill(0);
+        this.B = new Array(nrows).fill(0.0);
         for (let i = 0; i < nrows; i++) {
-            this.gsoMat[i] = new Array(ncols).fill(0);
-            this.basis[i] = new Array(ncols).fill(0);
+            this.gsoMat[i] = new Array(ncols).fill(0.0);
+            this.basis[i] = new Array(ncols).fill(0.0);
             this.mu[i] = new Array(nrows).fill(0);
-
+            
             this.basis[i][i] = 1;
             this.basis[i][0] = Math.round(Math.random() * 89999) + 10000
         }
@@ -100,7 +100,8 @@ function clicked() {
     const input = document.getElementById("input");
     const output = document.getElementById("output");
 
-    let lat = new Lattice(input.value, input.value);
+    let dim = input.value;
+    let lat = new Lattice(dim, dim);
     let str = lat.print();
     console.log(str);
     output.innerHTML = str;
