@@ -96,7 +96,7 @@ function clicked() {
     const input = document.getElementById("input");
     //const output = document.getElementById("output");
 
-    let lat = Lattice(input.Number, input.Number);
+    let lat = new Lattice(input.Number, input.Number);
     lat.print(document.getElementById("output"));
     //output.innerHTML = searchPlaceNameElements(input.value);
     // output.innerHTML = "Hello, World"
