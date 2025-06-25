@@ -21,13 +21,13 @@ class Lattice {
             this.gsoMat[i] = new Array(ncols);
             this.basis[i] = new Array(ncols);
             this.mu[i] = new Array(nrows);
-            
+
             this.B[i] = 0;
-            for(let j = 0; j < ncols; j++){
+            for (let j = 0; j < ncols; j++) {
                 this.basis[i][j] = 0;
                 this.gsoMat[i][j] = 0;
             }
-            for(let j = 0; j < nrows; j++){
+            for (let j = 0; j < nrows; j++) {
                 this.mu[i][j] = 0;
             }
 
@@ -108,4 +108,5 @@ function clicked() {
     let dim = input.value;
     let lat = new Lattice(dim, dim);
     lat.print();
+    console.log(output.innerHTML);
 }
