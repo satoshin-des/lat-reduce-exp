@@ -163,8 +163,6 @@ class Lattice {
         let tmp, nu, BB, t;
 
         for (let k = 1; k < this.nrows;) {
-            console.log(k);
-            console.log(this.mu);
             if (printInformation) {
                 this.firstBasisNorm = this.norm(this.basis[0]);
                 if (this.firstBasisNorm < this.shorterNorm) {
@@ -180,38 +178,39 @@ class Lattice {
 
             for (let j = k - 1; j >= 0; --j) {
                 this.partialSizeReduce(k, j);
-
-                if ((k > 0) && (this.B[k] < (delta - this.mu[k][k - 1] * this.mu[k][k - 1]) * this.B[k - 1])) {
-                    for (let i = 0; i < this.ncols; ++i) {
-                        tmp = this.basis[k - 1][i];
-                        this.basis[k - 1][i] = this.basis[k][i];
-                        this.basis[k][i] = tmp;
-                    }
-
-                    this.computeGSO();
-                    /*
-                    nu = this.mu[k][k - 1];
-                    BB = this.B[k] + nu * nu * this.B[k - 1];
-                    this.mu[k][k - 1] = nu * this.B[k - 1] / BB;
-                    this.B[k] *= this.B[k - 1] / BB;
-                    this.B[k - 1] = BB;
-
-                    for (let i = 0; i < k - 1; ++i) {
-                        t = this.mu[k - 1][i];
-                        this.mu[k - 1][i] = this.mu[k][i];
-                        this.mu[k][i] = t;
-                    }
-                    for (let i = k + 1; i < this.nrows; ++i) {
-                        t = this.mu[i][k];
-                        this.mu[i][k] = this.mu[i][k - 1] - nu * t;
-                        this.mu[i][k - 1] = t + this.mu[k][k - 1] * this.mu[i][k];
-                    }
-                        */
-                    k = Math.max(1, k - 1);
-                } else {
-                    ++k;
-                }
             }
+            
+            if ((k > 0) && (this.B[k] < (delta - this.mu[k][k - 1] * this.mu[k][k - 1]) * this.B[k - 1])) {
+                for (let i = 0; i < this.ncols; ++i) {
+                    tmp = this.basis[k - 1][i];
+                    this.basis[k - 1][i] = this.basis[k][i];
+                    this.basis[k][i] = tmp;
+                }
+
+                this.computeGSO();
+                /*
+                nu = this.mu[k][k - 1];
+                BB = this.B[k] + nu * nu * this.B[k - 1];
+                this.mu[k][k - 1] = nu * this.B[k - 1] / BB;
+                this.B[k] *= this.B[k - 1] / BB;
+                this.B[k - 1] = BB;
+
+                for (let i = 0; i < k - 1; ++i) {
+                    t = this.mu[k - 1][i];
+                    this.mu[k - 1][i] = this.mu[k][i];
+                    this.mu[k][i] = t;
+                }
+                for (let i = k + 1; i < this.nrows; ++i) {
+                    t = this.mu[i][k];
+                    this.mu[i][k] = this.mu[i][k - 1] - nu * t;
+                    this.mu[i][k - 1] = t + this.mu[k][k - 1] * this.mu[i][k];
+                }
+                    */
+                k = Math.max(1, k - 1);
+            } else {
+                ++k;
+            }
+
         }
     }
 }
