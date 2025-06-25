@@ -133,17 +133,18 @@ class Lattice {
             this.firstBasisNorm = this.norm(this.basis[0]);
             if(this.firstBasisNorm < this.shorterNorm){
                 this.shorterNorm = this.firstBasisNorm;
-                str = `A shorter vector is found: ${this.firstBasisNorm}<br>`
+                str = `<p style="color: white;">A shorter vector is found: ${this.firstBasisNorm}<br>`
                 for(let j = 0; j < this.ncols; j++){
                     str += `${this.basis[0][j]}`
                 }
-                str += `<br>`
+                str += `</p><br>`
                 output.innerHTML += str
             }
             for(let j = i - 1; j >= 0; j--){
                 this.partialSizeReduce(i, j);
             }
         }
+        output.innerHTML += `<hr>`
     }
 }
 
