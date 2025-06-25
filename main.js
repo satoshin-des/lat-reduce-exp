@@ -32,7 +32,7 @@ class Lattice {
      * @returns 
      */
     print(){
-        str = `<p style="color: white;">`;
+        let str = `<p style="color: white;">`;
         for(let i = 0; i < this.nrows; i++){
             for(let j = 0; j < this.ncols; j++){
                 str += `${this.basis[i][j]} `;
