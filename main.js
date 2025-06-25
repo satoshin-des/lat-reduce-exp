@@ -124,27 +124,90 @@ class Lattice {
 
     /**
      * サイズ基底簡約アルゴリズム
+     * @param {Boolean} printInformation 基底更新に関する情報を出力するかどうか
      */
-    sizeReduce(){
+    sizeReduce(printInformation) {
         let str = ``;
         this.computeGSO();
 
-        for(let i = 1; i < this.nrows; i++){
-            this.firstBasisNorm = this.norm(this.basis[0]);
-            if(this.firstBasisNorm < this.shorterNorm){
-                this.shorterNorm = this.firstBasisNorm;
-                str = `<p style="color: white;">A shorter vector is found: ${this.firstBasisNorm}<br>`
-                for(let j = 0; j < this.ncols; j++){
-                    str += `${this.basis[0][j]}`
+        for (let i = 1; i < this.nrows; i++) {
+            if (printInformation) {
+                this.firstBasisNorm = this.norm(this.basis[0]);
+                if (this.firstBasisNorm < this.shorterNorm) {
+                    this.shorterNorm = this.firstBasisNorm;
+                    str = `<p style="color: white;">A shorter vector is found: ${this.firstBasisNorm}<br>`
+                    for (let j = 0; j < this.ncols; j++) {
+                        str += `${this.basis[0][j]}`
+                    }
+                    str += `</p><br>`
+                    output.innerHTML += str
                 }
-                str += `</p><br>`
-                output.innerHTML += str
             }
-            for(let j = i - 1; j >= 0; j--){
+
+            for (let j = i - 1; j >= 0; j--) {
                 this.partialSizeReduce(i, j);
             }
         }
         output.innerHTML += `<hr>`
+    }
+
+    /**
+     * 
+     * @param {Number} delta 簡約パラメタ
+     * @param {Boolean} printInformation 基底更新に関する情報を出力するか
+     */
+    LLL(delta, printInformation) {
+        this.computeGSO();
+
+        let tmp, nu, BB, t;
+
+        for (let k = 0; k < this.nrows;) {
+            if (printInformation) {
+                this.firstBasisNorm = this.norm(this.basis[0]);
+                if (this.firstBasisNorm < this.shorterNorm) {
+                    this.shorterNorm = this.firstBasisNorm;
+                    str = `<p style="color: white;">A shorter vector is found: ${this.firstBasisNorm}<br>`
+                    for (let j = 0; j < this.ncols; j++) {
+                        str += `${this.basis[0][j]}`
+                    }
+                    str += `</p><br>`
+                    output.innerHTML += str
+                }
+            }
+
+            for (let j = k - 1; j >= 0; j--) {
+                this.partialSizeReduce(k, j);
+
+                if ((k > 0) && (this.B[k] < (delta - this.mu[k][k - 1] * this.mu[k][k - 1] * this.B[k - 1]))) {
+                    for (let i = 0; i < this.ncols; i++) {
+                        tmp = this.basis[k - 1][i];
+                        this.basis[k - 1][i] = this.basis[k][i];
+                        this.basis[k][i] = tmp
+                    }
+
+                    nu = this.mu[k][k - 1];
+                    BB = this.B[k] + nu * nu * this.B[k - 1];
+                    this.mu[k][k - 1] = nu * this.B[k - 1] / BB;
+                    this.B[k] *= this.B[k - 1] / BB;
+                    this.B[k - 1] = BB;
+
+                    for (let i = 0; i < k - 1; i++) {
+                        t = this.mu[k - 1][i];
+                        this.mu[k - 1][i] = this.mu[k][i];
+                        this.mu[k][i] = t;
+                    }
+                    for (let i = k + 1; i < this.nrows; i++) {
+                        t = this.mu[i][k];
+                        this.mu[i][k] = this.mu[i][k - 1] - nu * t;
+                        this.mu[i][k - 1] = t + this.mu[k][k - 1] * this.mu[i][k];
+                    }
+
+                    k--;
+                } else {
+                    k++;
+                }
+            }
+        }
     }
 }
 
@@ -168,5 +231,9 @@ function clickedPrintBasis() {
 }
 
 function clickedSizeReduce() {
-    lat.sizeReduce();
+    lat.sizeReduce(true);
+}
+
+function clickedLLL(){
+    lat.LLL(0.99, true);
 }
