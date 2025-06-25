@@ -224,7 +224,7 @@ function clicked() {
     const input = document.getElementById("input");
     //const output = document.getElementById("output");
 
-    let dim = input.value;
+    let dim = parseInt(input.value);
     lat = new Lattice(dim, dim);
     lat.computeGSO();
 }
