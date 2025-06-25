@@ -10,7 +10,7 @@ class Lattice {
     constructor(nrows, ncols) {
         this.nrows = nrows;
         this.ncols = ncols;
-        
+
         this.basis = new Array(nrows);
         this.mu = new Array(nrows);
         this.gsoMat = new Array(nrows);
@@ -29,10 +29,10 @@ class Lattice {
      * 
      * @returns 
      */
-    print(){
+    print() {
         let str = `<p style="color: white;">`;
-        for(let i = 0; i < this.nrows; i++){
-            for(let j = 0; j < this.ncols; j++){
+        for (let i = 0; i < this.nrows; i++) {
+            for (let j = 0; j < this.ncols; j++) {
                 str += `${this.basis[i][j]} `;
             }
             str += `<br>`;
@@ -101,6 +101,5 @@ function clicked() {
     const output = document.getElementById("output");
 
     let lat = new Lattice(input.Number, input.Number);
-    lat.print(document.getElementById("output"));
     output.innerHTML = lat.print();
 }
