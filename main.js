@@ -87,16 +87,16 @@ class Lattice {
      * GSO情報の計算
      */
     computeGSO() {
-        for (let i = 0; i < this.nrows; i++) {
+        for (let i = 0; i < this.nrows; ++i) {
             this.mu[i][i] = 1;
 
-            for (let j = 0; j < this.ncols; j++) {
+            for (let j = 0; j < this.ncols; ++j) {
                 this.gsoMat[i][j] = this.basis[i][j];
             }
 
-            for (let j = 0; j < i; j++) {
+            for (let j = 0; j < i; ++j) {
                 this.mu[i][j] = this.dotProduct(this.basis[i], this.gsoMat[j]) / this.dotProduct(this.gsoMat[j], this.gsoMat[j]);
-                for (let k = 0; k < this.ncols; k++) {
+                for (let k = 0; k < this.ncols; ++k) {
                     this.gsoMat[i][k] -= this.mu[i][j] * this.gsoMat[j][k];
                 }
             }
@@ -113,7 +113,7 @@ class Lattice {
         if (this.mu[i][j] > 0.5 || this.mu[i][j] < -0.5) {
             let q = Math.round(this.mu[i][j]);
 
-            for (let k = 0; k < this.ncols; k++) {
+            for (let k = 0; k < this.ncols; ++k) {
                 if (k <= j) {
                     this.mu[i][k] -= q * this.mu[j][k];
                 }
@@ -130,7 +130,7 @@ class Lattice {
         let str = ``;
         this.computeGSO();
 
-        for (let i = 1; i < this.nrows; i++) {
+        for (let i = 1; i < this.nrows; ++i) {
             if (printInformation) {
                 this.firstBasisNorm = this.norm(this.basis[0]);
                 if (this.firstBasisNorm < this.shorterNorm) {
@@ -160,8 +160,13 @@ class Lattice {
         this.computeGSO();
 
         let tmp, nu, BB, t;
+        let count = 0;
 
         for (let k = 0; k < this.nrows;) {
+            ++count;
+            if(count >= 10){
+                break;
+            }
             console.log(k);
             if (printInformation) {
                 this.firstBasisNorm = this.norm(this.basis[0]);
@@ -176,7 +181,7 @@ class Lattice {
                 }
             }
 
-            for (let j = k - 1; j >= 0; j--) {
+            for (let j = k - 1; j >= 0; --j) {
                 this.partialSizeReduce(k, j);
 
                 if ((k > 0) && (this.B[k] < (delta - this.mu[k][k - 1] * this.mu[k][k - 1] * this.B[k - 1]))) {
@@ -192,20 +197,20 @@ class Lattice {
                     this.B[k] *= this.B[k - 1] / BB;
                     this.B[k - 1] = BB;
 
-                    for (let i = 0; i < k - 1; i++) {
+                    for (let i = 0; i < k - 1; ++i) {
                         t = this.mu[k - 1][i];
                         this.mu[k - 1][i] = this.mu[k][i];
                         this.mu[k][i] = t;
                     }
-                    for (let i = k + 1; i < this.nrows; i++) {
+                    for (let i = k + 1; i < this.nrows; ++i) {
                         t = this.mu[i][k];
                         this.mu[i][k] = this.mu[i][k - 1] - nu * t;
                         this.mu[i][k - 1] = t + this.mu[k][k - 1] * this.mu[i][k];
                     }
 
-                    k--;
+                    --k;
                 } else {
-                    k++;
+                    ++k;
                 }
             }
         }
