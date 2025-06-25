@@ -27,15 +27,21 @@ class Lattice {
         }
     }
 
-    print(output){
-        output.innerHTML += `<p style="color: white;">`;
+    /**
+     * 
+     * @returns 
+     */
+    print(){
+        str = `<p style="color: white;">`;
         for(let i = 0; i < this.nrows; i++){
             for(let j = 0; j < this.ncols; j++){
-                output.innerHTML += `${this.basis[i][j]} `;
+                str += `${this.basis[i][j]} `;
             }
-            output.innerHTML += `<br>`
+            str += `<br>`;
         }
-        output.innerHTML += `</p>`
+        str += `</p>`;
+
+        return str;
     }
 
     /**
@@ -94,10 +100,11 @@ class Lattice {
 
 function clicked() {
     const input = document.getElementById("input");
-    //const output = document.getElementById("output");
+    const output = document.getElementById("output");
 
     let lat = new Lattice(input.Number, input.Number);
     lat.print(document.getElementById("output"));
+    output.innerHTML = lat.print();
     //output.innerHTML = searchPlaceNameElements(input.value);
     // output.innerHTML = "Hello, World"
 }
