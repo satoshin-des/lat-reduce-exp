@@ -184,7 +184,7 @@ class Lattice {
             for (let j = k - 1; j >= 0; --j) {
                 this.partialSizeReduce(k, j);
 
-                if ((k > 0) && (this.B[k] < (delta - this.mu[k][k - 1] * this.mu[k][k - 1] * this.B[k - 1]))) {
+                if ((k > 0) && (this.B[k] < (delta - this.mu[k][k - 1] * this.mu[k][k - 1]) * this.B[k - 1])) {
                     for (let i = 0; i < this.ncols; ++i) {
                         tmp = this.basis[k - 1][i];
                         this.basis[k - 1][i] = this.basis[k][i];
