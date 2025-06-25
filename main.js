@@ -245,5 +245,5 @@ function clickedLLL() {
 }
 
 function clearInner(){
-    innerHTML = ``
+    output.innerHTML = ``
 }
