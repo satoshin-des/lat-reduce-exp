@@ -95,7 +95,7 @@ class Lattice {
             }
 
             for (let j = 0; j < i; j++) {
-                this.mu[i][j] = this.dotProduct(basis[i], this.gsoMat[j]) / this.dotProduct(this.gsoMat[j], this.gsoMat[j]);
+                this.mu[i][j] = this.dotProduct(this.basis[i], this.gsoMat[j]) / this.dotProduct(this.gsoMat[j], this.gsoMat[j]);
                 for (let k = 0; k < this.ncols; k++) {
                     this.gsoMat[i][k] -= mu[i][j] * this.gsoMat[j][k];
                 }
