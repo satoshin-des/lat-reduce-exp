@@ -27,10 +27,6 @@ class Lattice {
         }
     }
 
-    /**
-     * 
-     * @param {HTMLElement} output 出力
-     */
     print(output){
         output.innerHTML += `<p style="color: white;">`;
         for(let i = 0; i < this.nrows; i++){
@@ -39,7 +35,7 @@ class Lattice {
             }
             output.innerHTML += `<br>`
         }
-        output += `</p>`
+        output.innerHTML += `</p>`
     }
 
     /**
@@ -98,10 +94,10 @@ class Lattice {
 
 function clicked() {
     const input = document.getElementById("input");
-    const output = document.getElementById("output");
+    //const output = document.getElementById("output");
 
     let lat = Lattice(input.Number, input.Number);
-    lat.print(output);
+    lat.print(document.getElementById("output"));
     //output.innerHTML = searchPlaceNameElements(input.value);
     // output.innerHTML = "Hello, World"
 }
