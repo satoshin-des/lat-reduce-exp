@@ -101,5 +101,7 @@ function clicked() {
     const output = document.getElementById("output");
 
     let lat = new Lattice(input.Number, input.Number);
-    output.innerHTML = lat.print();
+    let str = lat.print();
+    console.log(str);
+    output.innerHTML = str;
 }
