@@ -1,5 +1,7 @@
 const output = document.getElementById("output");
 
+output.innerHTML = ``
+
 /**
  * 格子のクラス
  */
@@ -51,7 +53,7 @@ class Lattice {
             str += `<br>`;
         }
         str += `</p>`;
-        output.innerHTML = str;
+        output.innerHTML += str;
         str = `<hr>`
         output.innerHTML += str;
     }
@@ -179,7 +181,7 @@ class Lattice {
             for (let j = k - 1; j >= 0; --j) {
                 this.partialSizeReduce(k, j);
             }
-            
+
             if ((k > 0) && (this.B[k] < (delta - this.mu[k][k - 1] * this.mu[k][k - 1]) * this.B[k - 1])) {
                 for (let i = 0; i < this.ncols; ++i) {
                     tmp = this.basis[k - 1][i];
@@ -240,4 +242,8 @@ function clickedSizeReduce() {
 
 function clickedLLL() {
     lat.LLL(0.99, true);
+}
+
+function clearInner(){
+    innerHTML = ``
 }
