@@ -67,7 +67,7 @@ class Lattice {
     /**
      * GSO情報の計算
      */
-    computeGso() {
+    computeGSO() {
         for (let i = 0; i < this.nrows; i++) {
             this.mu[i][i] = 1;
 
@@ -110,6 +110,14 @@ function clicked() {
 
     let dim = input.value;
     let lat = new Lattice(dim, dim);
+    lat.computeGSO();
+}
+
+function clickedPrintBasis() {
     lat.print();
     console.log(output.innerHTML);
+}
+
+function clickedSizeReduce() {
+
 }
