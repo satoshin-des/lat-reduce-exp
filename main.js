@@ -46,6 +46,8 @@ class Lattice {
         }
         str += `</p>`;
         output.innerHTML = str;
+        str = `<hr>`
+        output.innerHTML += str;
     }
 
     /**
