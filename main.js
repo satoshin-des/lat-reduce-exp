@@ -37,14 +37,15 @@ class Lattice {
     }
 
     print() {
-        output.innerHTML = `<p style="color: white;">`;
+        let str = `<p style="color: white;">`;
         for (let i = 0; i < this.nrows; i++) {
             for (let j = 0; j < this.ncols; j++) {
-                output.innerHTML += `${this.basis[i][j]} `;
+                str += `${this.basis[i][j]} `;
             }
-            output.innerHTML += `<br>`;
+            str += `<br>`;
         }
-        output.innerHTML += `</p>`;
+        str += `</p>`;
+        output.innerHTML = str;
     }
 
     /**
