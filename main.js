@@ -159,6 +159,7 @@ class Lattice {
     LLL(delta, printInformation) {
         this.computeGSO();
 
+        let str
         let tmp, nu, BB, t;
 
         for (let k = 1; k < this.nrows;) {
