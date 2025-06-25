@@ -1,3 +1,5 @@
+const output = document.getElementById("output");
+
 /**
  * 格子のクラス
  */
@@ -107,7 +109,7 @@ class Lattice {
 
 function clicked() {
     const input = document.getElementById("input");
-    const output = document.getElementById("output");
+    //const output = document.getElementById("output");
 
     let dim = input.value;
     let lat = new Lattice(dim, dim);
