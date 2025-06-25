@@ -218,7 +218,7 @@ class Lattice {
 /**
  * 格子
  */
-let lat = new Lattice(5, 5);
+let lat;// = new Lattice(5, 5);
 
 function clicked() {
     const input = document.getElementById("input");
