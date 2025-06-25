@@ -162,6 +162,7 @@ class Lattice {
         let tmp, nu, BB, t;
 
         for (let k = 0; k < this.nrows;) {
+            console.log(k);
             if (printInformation) {
                 this.firstBasisNorm = this.norm(this.basis[0]);
                 if (this.firstBasisNorm < this.shorterNorm) {
