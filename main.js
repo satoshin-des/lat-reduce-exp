@@ -34,8 +34,14 @@ class Lattice {
             this.basis[i][i] = 1;
             this.basis[i][0] = Math.round(Math.random() * 89999) + 10000
         }
+
+        this.firstBasisNorm = this.norm(this.basis[0]);
+        this.shorterNorm = this.norm(this.basis[0]);
     }
 
+    /**
+     * 格子基底行列の出力
+     */
     print() {
         let str = `<p style="color: white;">`;
         for (let i = 0; i < this.nrows; i++) {
@@ -51,7 +57,7 @@ class Lattice {
     }
 
     /**
-     * 
+     * 二つのベクトルの内積を計算する関数
      * @param {Array} x ベクトル
      * @param {Array} y ベクトル
      * @returns 内積
@@ -62,6 +68,19 @@ class Lattice {
             sum += x[i] * y[i];
         }
         return sum;
+    }
+
+    /**
+     * ベクトルのノルムを計算する関数
+     * @param {Array} x ベクトル
+     * @returns ノルム
+     */
+    norm(x) {
+        let sum = 0.0;
+        for (let i = 0; i < x.length; i++) {
+            sum += x[i] * x[i];
+        }
+        return Math.sqrt(sum);
     }
 
     /**
@@ -76,7 +95,7 @@ class Lattice {
             }
 
             for (let j = 0; j < i; j++) {
-                mu[i][j] = this.dotProduct(basis[i], this.gsoMat[j]) / this.dotProduct(this.gsoMat[j], this.gsoMat[j]);
+                this.mu[i][j] = this.dotProduct(basis[i], this.gsoMat[j]) / this.dotProduct(this.gsoMat[j], this.gsoMat[j]);
                 for (let k = 0; k < this.ncols; k++) {
                     this.gsoMat[i][k] -= mu[i][j] * this.gsoMat[j][k];
                 }
@@ -102,8 +121,34 @@ class Lattice {
             }
         }
     }
+
+    /**
+     * サイズ基底簡約アルゴリズム
+     */
+    sizeReduce(){
+        let str = ``;
+        this.computeGSO();
+
+        for(let i = 1; i < this.nrows; i++){
+            this.firstBasisNorm = this.norm(this.basis[0]);
+            if(this.firstBasisNorm < this.shorterNorm){
+                this.shorterNorm = this.firstBasisNorm;
+                str = `A shorter vector is found: ${this.firstBasisNorm}<br>`
+                for(let j = 0; j < this.ncols; j++){
+                    str += `${this.basis[0][j]}`
+                }
+                output.innerHTML += str
+            }
+            for(let j = i - 1; j >= 0; j--){
+                this.sizeReduce(i, j);
+            }
+        }
+    }
 }
 
+/**
+ * 格子
+ */
 let lat = new Lattice(5, 5);
 
 function clicked() {
@@ -121,5 +166,5 @@ function clickedPrintBasis() {
 }
 
 function clickedSizeReduce() {
-
+    lat.sizeReduce();
 }
