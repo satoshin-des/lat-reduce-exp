@@ -160,13 +160,8 @@ class Lattice {
         this.computeGSO();
 
         let tmp, nu, BB, t;
-        let count = 0;
 
         for (let k = 0; k < this.nrows;) {
-            ++count;
-            if (count >= 10) {
-                break;
-            }
             console.log(k);
             if (printInformation) {
                 this.firstBasisNorm = this.norm(this.basis[0]);
@@ -188,7 +183,7 @@ class Lattice {
                     for (let i = 0; i < this.ncols; ++i) {
                         tmp = this.basis[k - 1][i];
                         this.basis[k - 1][i] = this.basis[k][i];
-                        this.basis[k][i] = tmp
+                        this.basis[k][i] = tmp;
                     }
 
                     this.computeGSO();
