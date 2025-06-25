@@ -100,7 +100,7 @@ function clicked() {
     const input = document.getElementById("input");
     const output = document.getElementById("output");
 
-    let lat = new Lattice(input.Number, input.Number);
+    let lat = new Lattice(input.value, input.value);
     let str = lat.print();
     console.log(str);
     output.innerHTML = str;
