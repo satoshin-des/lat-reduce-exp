@@ -111,7 +111,7 @@ class Lattice {
      */
     partialSizeReduce(i, j) {
         if (this.mu[i][j] > 0.5 || this.mu[i][j] < -0.5) {
-            let q = Math.round(this.mu[i][j]);
+            const q = Math.round(this.mu[i][j]);
 
             for (let k = 0; k < this.ncols; ++k) {
                 if (k <= j) {
@@ -161,7 +161,7 @@ class Lattice {
 
         let tmp, nu, BB, t;
 
-        for (let k = 0; k < this.nrows;) {
+        for (let k = 1; k < this.nrows;) {
             console.log(k);
             if (printInformation) {
                 this.firstBasisNorm = this.norm(this.basis[0]);
