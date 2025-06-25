@@ -12,7 +12,7 @@ class Lattice {
     constructor(nrows, ncols) {
         this.nrows = nrows;
         this.ncols = ncols;
-
+        
         this.basis = new Array(nrows);
         this.mu = new Array(nrows);
         this.gsoMat = new Array(nrows);
@@ -21,7 +21,25 @@ class Lattice {
             this.gsoMat[i] = new Array(ncols).fill(0);
             this.basis[i] = new Array(ncols).fill(0);
             this.mu[i] = new Array(nrows).fill(0);
+
+            this.basis[i][i] = 1;
+            this.basis[i][0] = Math.round(Math.random() * 89999) + 10000
         }
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} output 出力
+     */
+    print(output){
+        output.innerHTML += `<p style="color: white;">`;
+        for(let i = 0; i < this.nrows; i++){
+            for(let j = 0; j < this.ncols; j++){
+                output.innerHTML += `${this.basis[i][j]} `;
+            }
+            output.innerHTML += `<br>`
+        }
+        output += `</p>`
     }
 
     /**
@@ -59,9 +77,21 @@ class Lattice {
         }
     }
 
+    /**
+     * 部分サイズ基底簡約アルゴリズム
+     * @param {Number} i インデックス
+     * @param {Number} j インデックス
+     */
     sizeReduce(i, j) {
         if (this.mu[i][j] > 0.5 || this.mu[i][j] < -0.5) {
             let q = Math.round(this.mu[i][j]);
+
+            for (let k = 0; k < this.ncols; k++) {
+                if (k <= j) {
+                    this.mu[i][k] -= q * this.mu[j][k];
+                }
+                this.basis[i][k] -= q * this.basis[j][k];
+            }
         }
     }
 }
@@ -70,10 +100,8 @@ function clicked() {
     const input = document.getElementById("input");
     const output = document.getElementById("output");
 
+    let lat = Lattice(input.Number, input.Number);
+    lat.print(output);
     //output.innerHTML = searchPlaceNameElements(input.value);
-    output.innerHTML = "Hello, World"
+    // output.innerHTML = "Hello, World"
 }
-
-
-//
-console.log("Hello, World")
