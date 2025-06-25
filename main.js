@@ -105,6 +105,4 @@ function clicked() {
     let lat = new Lattice(input.Number, input.Number);
     lat.print(document.getElementById("output"));
     output.innerHTML = lat.print();
-    //output.innerHTML = searchPlaceNameElements(input.value);
-    // output.innerHTML = "Hello, World"
 }
