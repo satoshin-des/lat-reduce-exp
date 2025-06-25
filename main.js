@@ -170,7 +170,7 @@ class Lattice {
                     this.shorterNorm = this.firstBasisNorm;
                     str = `<p style="color: white;">A shorter vector is found: ${this.firstBasisNorm}<br>`
                     for (let j = 0; j < this.ncols; j++) {
-                        str += `${this.basis[0][j]}`
+                        str += `${this.basis[0][j]} `
                     }
                     str += `</p><br>`
                     output.innerHTML += str
