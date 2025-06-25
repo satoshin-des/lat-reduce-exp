@@ -164,7 +164,7 @@ class Lattice {
 
         for (let k = 0; k < this.nrows;) {
             ++count;
-            if(count >= 10){
+            if (count >= 10) {
                 break;
             }
             console.log(k);
@@ -185,12 +185,14 @@ class Lattice {
                 this.partialSizeReduce(k, j);
 
                 if ((k > 0) && (this.B[k] < (delta - this.mu[k][k - 1] * this.mu[k][k - 1] * this.B[k - 1]))) {
-                    for (let i = 0; i < this.ncols; i++) {
+                    for (let i = 0; i < this.ncols; ++i) {
                         tmp = this.basis[k - 1][i];
                         this.basis[k - 1][i] = this.basis[k][i];
                         this.basis[k][i] = tmp
                     }
 
+                    this.computeGSO();
+                    /*
                     nu = this.mu[k][k - 1];
                     BB = this.B[k] + nu * nu * this.B[k - 1];
                     this.mu[k][k - 1] = nu * this.B[k - 1] / BB;
@@ -207,6 +209,7 @@ class Lattice {
                         this.mu[i][k] = this.mu[i][k - 1] - nu * t;
                         this.mu[i][k - 1] = t + this.mu[k][k - 1] * this.mu[i][k];
                     }
+                        */
 
                     --k;
                 } else {
@@ -240,6 +243,6 @@ function clickedSizeReduce() {
     lat.sizeReduce(true);
 }
 
-function clickedLLL(){
+function clickedLLL() {
     lat.LLL(0.99, true);
 }
