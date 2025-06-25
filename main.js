@@ -36,21 +36,15 @@ class Lattice {
         }
     }
 
-    /**
-     * 
-     * @returns 
-     */
     print() {
-        let str = `<p style="color: white;">`;
+        output.innerHTML = `<p style="color: white;">`;
         for (let i = 0; i < this.nrows; i++) {
             for (let j = 0; j < this.ncols; j++) {
-                str += `${this.basis[i][j]} `;
+                output.innerHTML += `${this.basis[i][j]} `;
             }
-            str += `<br>`;
+            output.innerHTML += `<br>`;
         }
-        str += `</p>`;
-
-        return str;
+        output.innerHTML += `</p>`;
     }
 
     /**
@@ -113,7 +107,5 @@ function clicked() {
 
     let dim = input.value;
     let lat = new Lattice(dim, dim);
-    let str = lat.print();
-    console.log(str);
-    output.innerHTML = str;
+    lat.print();
 }
