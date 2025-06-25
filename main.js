@@ -104,12 +104,14 @@ class Lattice {
     }
 }
 
+let lat = new Lattice(5, 5);
+
 function clicked() {
     const input = document.getElementById("input");
     //const output = document.getElementById("output");
 
     let dim = input.value;
-    let lat = new Lattice(dim, dim);
+    lat = new Lattice(dim, dim);
     lat.computeGSO();
 }
 
