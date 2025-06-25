@@ -137,6 +137,7 @@ class Lattice {
                 for(let j = 0; j < this.ncols; j++){
                     str += `${this.basis[0][j]}`
                 }
+                str += `<br>`
                 output.innerHTML += str
             }
             for(let j = i - 1; j >= 0; j--){
