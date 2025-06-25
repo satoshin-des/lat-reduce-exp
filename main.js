@@ -206,8 +206,7 @@ class Lattice {
                         this.mu[i][k - 1] = t + this.mu[k][k - 1] * this.mu[i][k];
                     }
                         */
-
-                    --k;
+                    k = Math.max(1, k - 1);
                 } else {
                     ++k;
                 }
