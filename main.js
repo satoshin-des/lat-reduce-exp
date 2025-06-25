@@ -14,12 +14,21 @@ class Lattice {
         this.basis = new Array(nrows);
         this.mu = new Array(nrows);
         this.gsoMat = new Array(nrows);
-        this.B = new Array(nrows).fill(0.0);
+        this.B = new Array(nrows);
         for (let i = 0; i < nrows; i++) {
-            this.gsoMat[i] = new Array(ncols).fill(0.0);
-            this.basis[i] = new Array(ncols).fill(0.0);
-            this.mu[i] = new Array(nrows).fill(0);
+            this.gsoMat[i] = new Array(ncols);
+            this.basis[i] = new Array(ncols);
+            this.mu[i] = new Array(nrows);
             
+            this.B[i] = 0;
+            for(let j = 0; j < ncols; j++){
+                this.basis[i][j] = 0;
+                this.gsoMat[i][j] = 0;
+            }
+            for(let j = 0; j < nrows; j++){
+                this.mu[i][j] = 0;
+            }
+
             this.basis[i][i] = 1;
             this.basis[i][0] = Math.round(Math.random() * 89999) + 10000
         }
