@@ -109,7 +109,7 @@ class Lattice {
      * @param {Number} i インデックス
      * @param {Number} j インデックス
      */
-    sizeReduce(i, j) {
+    partialSizeReduce(i, j) {
         if (this.mu[i][j] > 0.5 || this.mu[i][j] < -0.5) {
             let q = Math.round(this.mu[i][j]);
 
@@ -141,7 +141,7 @@ class Lattice {
                 output.innerHTML += str
             }
             for(let j = i - 1; j >= 0; j--){
-                this.sizeReduce(i, j);
+                this.partialSizeReduce(i, j);
             }
         }
     }
