@@ -7,7 +7,7 @@ output.innerHTML = ``
  * @param {Number} ms 待機時間
  * @returns 
  */
-function wait(ms){
+async function wait(ms){
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -178,14 +178,14 @@ class Lattice {
                 this.firstBasisNorm = this.norm(this.basis[0]);
                 if (this.firstBasisNorm < this.shorterNorm) {
                     this.shorterNorm = this.firstBasisNorm;
-                    str = `<p style="color: white;">A shorter vector is found: ${this.firstBasisNorm}<br>`
+                    str = `<p style="color: white;">A shorter vector is found: ${this.firstBasisNorm}<br>`;
                     for (let j = 0; j < this.ncols; j++) {
-                        str += `${this.basis[0][j]} `
+                        str += `${this.basis[0][j]} `;
                     }
-                    str += `</p><br>`
-                    output.innerHTML += str
+                    str += `</p><br>`;
+                    output.innerHTML += str;
 
-                    wait(0);
+                    await wait(16);
                 }
             }
 
