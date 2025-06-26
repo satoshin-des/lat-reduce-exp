@@ -7,7 +7,7 @@ output.innerHTML = ``
  * @param {Number} ms 待機時間
  * @returns 
  */
-async function wait(ms){
+function wait(ms){
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -167,7 +167,7 @@ class Lattice {
      * @param {Number} delta 簡約パラメタ
      * @param {Boolean} printInformation 基底更新に関する情報を出力するか
      */
-    LLL(delta, printInformation) {
+    async LLL(delta, printInformation) {
         this.computeGSO();
 
         let str
