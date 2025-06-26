@@ -3,6 +3,15 @@ const output = document.getElementById("output");
 output.innerHTML = ``
 
 /**
+ * 指定時間待機する
+ * @param {Number} ms 待機時間
+ * @returns 
+ */
+function wait(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
  * 格子のクラス
  */
 class Lattice {
@@ -175,6 +184,8 @@ class Lattice {
                     }
                     str += `</p><br>`
                     output.innerHTML += str
+
+                    wait(0);
                 }
             }
 
