@@ -257,6 +257,7 @@ class Lattice {
                         }
                         this.basis[i][h] = tmp;
                     }
+                    this.computeGSO();
                     k = Math.max(i - 1, 0);
                 }
             }
