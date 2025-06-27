@@ -7,7 +7,7 @@ output.innerHTML = ``
  * @param {Number} ms 待機時間
  * @returns 
  */
-function wait(ms){
+function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -171,7 +171,7 @@ class Lattice {
         this.computeGSO();
 
         let str
-        let tmp, nu, BB, t;
+        let tmp;
 
         for (let k = 1; k < this.nrows;) {
             if (printInformation) {
@@ -201,29 +201,65 @@ class Lattice {
                 }
 
                 this.computeGSO();
-                /*
-                nu = this.mu[k][k - 1];
-                BB = this.B[k] + nu * nu * this.B[k - 1];
-                this.mu[k][k - 1] = nu * this.B[k - 1] / BB;
-                this.B[k] *= this.B[k - 1] / BB;
-                this.B[k - 1] = BB;
-
-                for (let i = 0; i < k - 1; ++i) {
-                    t = this.mu[k - 1][i];
-                    this.mu[k - 1][i] = this.mu[k][i];
-                    this.mu[k][i] = t;
-                }
-                for (let i = k + 1; i < this.nrows; ++i) {
-                    t = this.mu[i][k];
-                    this.mu[i][k] = this.mu[i][k - 1] - nu * t;
-                    this.mu[i][k - 1] = t + this.mu[k][k - 1] * this.mu[i][k];
-                }
-                    */
                 k = Math.max(1, k - 1);
             } else {
                 ++k;
             }
 
+        }
+    }
+
+    async deepLLL(delta, printInformation) {
+        this.computeGSO();
+
+        let tmp, C;
+        let count = 0;
+
+        for (let k = 1; k < this.nrows;) {
+            if (printInformation) {
+                this.firstBasisNorm = this.norm(this.basis[0]);
+                if (this.firstBasisNorm < this.shorterNorm) {
+                    this.shorterNorm = this.firstBasisNorm;
+                    str = `<p style="color: white;">A shorter vector is found: ${this.firstBasisNorm}<br>`;
+                    for (let j = 0; j < this.ncols; j++) {
+                        str += `${this.basis[0][j]} `;
+                    }
+                    str += `</p><br>`;
+                    output.innerHTML += str;
+
+                    await wait(16);
+                }
+            }
+
+            for (let j = k - 1; j >= 0; --j) {
+                this.partialSizeReduce(k, j);
+            }
+
+            C = this.dotProduct(this.basis[k], this.basis[k]);
+
+            for (let i = 0; i < k;) {
+                ++count;
+
+                if (count >= 10) {
+                    count = 0;
+                    await wait(16);
+                }
+
+                if (C >= delta * this.B[i]) {
+                    C -= this.mu[k][i] * this.mu[k][i] + this.B[i];
+                    ++i;
+                } else {
+                    for (let h = 0; h < this.ncols; ++h) {
+                        tmp = this.basis[k][h];
+                        for (let j = k; j > i; --j) {
+                            this.basis[j][h] = this.basis[j - 1][h];
+                        }
+                        this.basis[i][h] = tmp;
+                    }
+                    k = Math.max(i - 1, 0);
+                }
+            }
+            ++k;
         }
     }
 }
@@ -255,6 +291,10 @@ function clickedLLL() {
     lat.LLL(0.99, true);
 }
 
-function clearInner(){
+function clickedDeepLLL() {
+    lat.deepLLL(0.99, true);
+}
+
+function clearInner() {
     output.innerHTML = ``
 }
