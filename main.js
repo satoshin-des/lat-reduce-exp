@@ -212,6 +212,7 @@ class Lattice {
     async deepLLL(delta, printInformation) {
         this.computeGSO();
 
+        let str;
         let tmp, C;
         let count = 0;
 
