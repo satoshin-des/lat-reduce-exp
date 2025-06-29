@@ -65,7 +65,7 @@ class Lattice {
         }
         str += `</p>`;
         output.innerHTML += str;
-        str = `<hr style="color: white;>`
+        str = `<hr>`
         output.innerHTML += str;
     }
 
@@ -178,7 +178,7 @@ class Lattice {
                 this.partialSizeReduce(i, j);
             }
         }
-        output.innerHTML += `<hr style="color: white;>`
+        output.innerHTML += `<hr>`
     }
 
     /**
@@ -227,7 +227,8 @@ class Lattice {
                 ++k;
             }
         }
-        output.innerHTML += `<hr style="color: white;>`
+
+        output.innerHTML += `<hr>`
     }
 
     /**
@@ -291,7 +292,7 @@ class Lattice {
             }
             ++k;
         }
-        output.innerHTML += `<hr style="color: white;>`
+        output.innerHTML += `<hr>`
     }
 
     /**
@@ -362,7 +363,7 @@ class Lattice {
                     if (!hasSolution) {
                         coeffVector = new Array(this.nrows).fill(0);
                     }
-                    output.innerHTML += `<hr style="color: white;>`
+                    output.innerHTML += `<hr>`
                     break;
                 } else {
                     r[k] = k;
