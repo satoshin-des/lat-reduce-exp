@@ -289,7 +289,7 @@ class Lattice {
      * 最短ベクトルの数え上げアルゴリズム
      */
     async ENUM() {
-        let temp, count = 0;
+        let temp, count = 0, str;
         let latticeVector;
         let hasSolution = false;
         let r = new Array(this.nrows + 1).fill().map((_, i) => i);
