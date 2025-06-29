@@ -267,7 +267,7 @@ class Lattice {
                 }
 
                 if (C >= delta * this.B[i]) {
-                    C -= this.mu[k][i] * this.mu[k][i] + this.B[i];
+                    C -= this.mu[k][i] * this.mu[k][i] * this.B[i];
                     ++i;
                 } else {
                     for (let h = 0; h < this.ncols; ++h) {
