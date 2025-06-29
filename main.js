@@ -94,20 +94,35 @@ class Lattice {
         return Math.sqrt(sum);
     }
 
+    coeffToLatticeVector(coeffVector) {
+        let latticeVector = new Array(this.ncols);
+        let sum;
+        let i, j;
+        for (j = 0; j < this.ncols; ++j) {
+            sum = 0;
+            for (i = 0; i < this.nrows; ++i) {
+                sum += coeffVector[i] * this.basis[i][j];
+            }
+            latticeVector[j] = sum;
+        }
+        return latticeVector;
+    }
+
     /**
      * GSO情報の計算
      */
     computeGSO() {
-        for (let i = 0; i < this.nrows; ++i) {
+        let i, j, k;
+        for (i = 0; i < this.nrows; ++i) {
             this.mu[i][i] = 1;
 
-            for (let j = 0; j < this.ncols; ++j) {
+            for (j = 0; j < this.ncols; ++j) {
                 this.gsoMat[i][j] = this.basis[i][j];
             }
 
-            for (let j = 0; j < i; ++j) {
+            for (j = 0; j < i; ++j) {
                 this.mu[i][j] = this.dotProduct(this.basis[i], this.gsoMat[j]) / this.dotProduct(this.gsoMat[j], this.gsoMat[j]);
-                for (let k = 0; k < this.ncols; ++k) {
+                for (k = 0; k < this.ncols; ++k) {
                     this.gsoMat[i][k] -= this.mu[i][j] * this.gsoMat[j][k];
                 }
             }
@@ -209,6 +224,11 @@ class Lattice {
         }
     }
 
+    /**
+     * DeepLLL簡約アルゴリズム
+     * @param {Number} delta 簡約パラメタ
+     * @param {Boolean} printInformation 基底更新に関する情報を出力するか
+     */
     async deepLLL(delta, printInformation) {
         this.computeGSO();
 
@@ -264,6 +284,187 @@ class Lattice {
             ++k;
         }
     }
+
+    /**
+     * 最短ベクトルの数え上げアルゴリズム
+     */
+    async ENUM() {
+        let temp, count = 0;
+        let latticeVector;
+        let hasSolution = false;
+        let r = new Array(this.nrows + 1).fill().map((_, i) => i);
+        let lastNonzero = 0;
+        let wt = new Array(this.nrows).fill(0);
+        let tempVector = new Array(this.nrows).fill(0);
+        let coeffVector;
+        let center = new Array(this.nrows).fill(0);
+        let sigma = new Array(this.nrows + 1).fill().map(() => Array(this.nrows).fill(0));
+        let rho = new Array(this.nrows + 1).fill(0);
+        let R = B[0];
+
+        tempVector[0] = 1;
+
+        this.computeGSO();
+
+        for (let k = 0; ;) {
+            ++count;
+            if (count >= 10) {
+                count = 0;
+                await wait(16);
+            }
+
+            temp = tempVector[k] - center[k];
+            temp *= temp;
+            rho[k] = rho[k + 1] + temp * B[k];
+            if (rho[k] <= R) {
+                if (k == 0) {
+                    R = Math.min(0.99 * rho[0], R);
+                    hasSolution = true;
+                    coeffVector = Array.from(tempVector);
+
+                    latticeVector = this.coeffToLatticeVector(coeffVector);
+                    str = `<p style="color: white;">A shorter vector is found: ${this.norm(latticeVector)}<br>`;
+                    for (let j = 0; j < this.ncols; j++) {
+                        str += `${latticeVector[j]} `;
+                    }
+                    str += `</p><br>`;
+                    output.innerHTML += str;
+
+                    await wait(16);
+                } else {
+                    --k;
+                    if (r[k + 1] >= r[k]) {
+                        r[k] = r[k + 1];
+                    }
+                    for (let i = r[k]; i > k; --i) {
+                        sigma[i][k] = sigma[i + 1][k] + mu[i][k] * tempVector[i];
+                    }
+                    center[k] = -sigma[k + 1][k];
+                    tempVector[k] = Math.round(center[k]);
+                    wt[k] = 1;
+                }
+            } else {
+                ++k;
+                if (k == this.nrows) {
+                    if (!hasSolution) {
+                        coeffVector = new Array(this.nrows).fill(0);
+                    }
+                    break;
+                } else {
+                    r[k] = k;
+                    if (k >= lastNonzero) {
+                        lastNonzero = k;
+                        ++tempVector[k];
+                    } else {
+                        if (tempVector[k] > center[k]) {
+                            tempVector[k] -= wt[k];
+                        } else {
+                            tempVector[k] += wt[k];
+                        }
+                        ++wt[k];
+                    }
+                }
+            }
+        }
+    }
+
+    /*
+    #include "stdafx.h"
+
+#include "test.h"
+
+bool QRLatRed::ENUM(VectorXli &coeff_vector, double R, const long start, const long end)
+{
+    bool has_solution = false;
+    const long n = end - start;
+    long i, j, r[n + 1];
+    long last_nonzero = 0;
+    long double temp;
+    long weight[n];
+    VectorXli temp_vector = VectorXli::Zero(n);
+    long double center[n];
+    long double sigma[n + 1][n];
+    m_rho = VectorXld::Zero(n + 1);
+
+    temp_vector.coeffRef(0) = 1;
+    for (i = 0; i < n; ++i)
+    {
+        weight[i] = 0;
+        center[i] = 0;
+        for (j = 0; j <= n; ++j)
+        {
+            sigma[j][i] = 0;
+        }
+        r[i] = i;
+    }
+
+    for (long k = 0;;)
+    {
+        temp = static_cast<long double>(temp_vector.coeff(k)) - center[k];
+        temp *= temp;
+        m_rho.coeffRef(k) = m_rho.coeff(k + 1) + temp * m_B.coeff(k + start);
+        if (m_rho.coeff(k) <= R)
+        {
+            if (k == 0)
+            {
+                R = std::min(static_cast<double>(0.99 * m_rho.coeff(0)), R);
+                has_solution = true;
+                coeff_vector = temp_vector;
+            }
+            else
+            {
+                --k;
+                if (r[k + 1] >= r[k])
+                {
+                    r[k] = r[k + 1];
+                }
+                for (i = r[k]; i > k; --i)
+                {
+                    sigma[i][k] = sigma[i + 1][k] + m_mu.coeff(i + start, k + start) * temp_vector.coeff(i);
+                }
+                center[k] = -sigma[k + 1][k];
+                temp_vector.coeffRef(k) = round(center[k]);
+                weight[k] = 1;
+            }
+        }
+        else
+        {
+            ++k;
+            if (k == n)
+            {
+                if (not has_solution)
+                {
+                    coeff_vector.setZero();
+                }
+                return has_solution;
+            }
+            else
+            {
+                r[k] = k;
+                if (k >= last_nonzero)
+                {
+                    last_nonzero = k;
+                    ++temp_vector.coeffRef(k);
+                }
+                else
+                {
+                    if (temp_vector.coeff(k) > center[k])
+                    {
+                        temp_vector.coeffRef(k) -= weight[k];
+                    }
+                    else
+                    {
+                        temp_vector.coeffRef(k) += weight[k];
+                    }
+
+                    ++weight[k];
+                }
+            }
+        }
+    }
+}
+
+    */
 }
 
 /**
@@ -295,6 +496,10 @@ function clickedLLL() {
 
 function clickedDeepLLL() {
     lat.deepLLL(0.99, true);
+}
+
+function clickedENUM(){
+    lat.ENUM();
 }
 
 function clearInner() {
