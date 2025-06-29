@@ -21,6 +21,8 @@ class Lattice {
      * @param {Number} ncols 格子ベクトルのサイズ
      */
     constructor(nrows, ncols) {
+        this.isReduced = false;
+
         this.nrows = nrows;
         this.ncols = ncols;
 
@@ -153,6 +155,8 @@ class Lattice {
      * @param {Boolean} printInformation 基底更新に関する情報を出力するかどうか
      */
     sizeReduce(printInformation) {
+        this.isReduced = true;
+
         let str = ``;
         this.computeGSO();
 
@@ -183,6 +187,8 @@ class Lattice {
      * @param {Boolean} printInformation 基底更新に関する情報を出力するか
      */
     async LLL(delta, printInformation) {
+        this.isReduced = true;
+
         this.computeGSO();
 
         let str
@@ -230,6 +236,8 @@ class Lattice {
      * @param {Boolean} printInformation 基底更新に関する情報を出力するか
      */
     async deepLLL(delta, printInformation) {
+        this.isReduced = true;
+
         this.computeGSO();
 
         let str;
@@ -290,6 +298,10 @@ class Lattice {
      * 最短ベクトルの数え上げアルゴリズム
      */
     async ENUM() {
+        if (!this.isReduced) {
+            output.innerHTML += `<p style="color: red;><b>Warning: The generated lattice is not reduced.</b></p><br>`
+        }
+
         let temp, count = 0, str;
         let latticeVector;
         let hasSolution = false;
@@ -369,104 +381,6 @@ class Lattice {
             }
         }
     }
-
-    /*
-    #include "stdafx.h"
-
-#include "test.h"
-
-bool QRLatRed::ENUM(VectorXli &coeff_vector, double R, const long start, const long end)
-{
-    bool has_solution = false;
-    const long n = end - start;
-    long i, j, r[n + 1];
-    long last_nonzero = 0;
-    long double temp;
-    long weight[n];
-    VectorXli temp_vector = VectorXli::Zero(n);
-    long double center[n];
-    long double sigma[n + 1][n];
-    m_rho = VectorXld::Zero(n + 1);
-
-    temp_vector.coeffRef(0) = 1;
-    for (i = 0; i < n; ++i)
-    {
-        weight[i] = 0;
-        center[i] = 0;
-        for (j = 0; j <= n; ++j)
-        {
-            sigma[j][i] = 0;
-        }
-        r[i] = i;
-    }
-
-    for (long k = 0;;)
-    {
-        temp = static_cast<long double>(temp_vector.coeff(k)) - center[k];
-        temp *= temp;
-        m_rho.coeffRef(k) = m_rho.coeff(k + 1) + temp * m_B.coeff(k + start);
-        if (m_rho.coeff(k) <= R)
-        {
-            if (k == 0)
-            {
-                R = std::min(static_cast<double>(0.99 * m_rho.coeff(0)), R);
-                has_solution = true;
-                coeff_vector = temp_vector;
-            }
-            else
-            {
-                --k;
-                if (r[k + 1] >= r[k])
-                {
-                    r[k] = r[k + 1];
-                }
-                for (i = r[k]; i > k; --i)
-                {
-                    sigma[i][k] = sigma[i + 1][k] + m_mu.coeff(i + start, k + start) * temp_vector.coeff(i);
-                }
-                center[k] = -sigma[k + 1][k];
-                temp_vector.coeffRef(k) = round(center[k]);
-                weight[k] = 1;
-            }
-        }
-        else
-        {
-            ++k;
-            if (k == n)
-            {
-                if (not has_solution)
-                {
-                    coeff_vector.setZero();
-                }
-                return has_solution;
-            }
-            else
-            {
-                r[k] = k;
-                if (k >= last_nonzero)
-                {
-                    last_nonzero = k;
-                    ++temp_vector.coeffRef(k);
-                }
-                else
-                {
-                    if (temp_vector.coeff(k) > center[k])
-                    {
-                        temp_vector.coeffRef(k) -= weight[k];
-                    }
-                    else
-                    {
-                        temp_vector.coeffRef(k) += weight[k];
-                    }
-
-                    ++weight[k];
-                }
-            }
-        }
-    }
-}
-
-    */
 }
 
 /**
@@ -500,7 +414,7 @@ function clickedDeepLLL() {
     lat.deepLLL(0.99, true);
 }
 
-function clickedENUM(){
+function clickedENUM() {
     lat.ENUM();
 }
 
