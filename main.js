@@ -220,8 +220,8 @@ class Lattice {
             } else {
                 ++k;
             }
-
         }
+        output.innerHTML += `<hr>`
     }
 
     /**
@@ -283,6 +283,7 @@ class Lattice {
             }
             ++k;
         }
+        output.innerHTML += `<hr>`
     }
 
     /**
@@ -349,6 +350,7 @@ class Lattice {
                     if (!hasSolution) {
                         coeffVector = new Array(this.nrows).fill(0);
                     }
+                    output.innerHTML += `<hr>`
                     break;
                 } else {
                     r[k] = k;
