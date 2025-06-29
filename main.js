@@ -300,7 +300,7 @@ class Lattice {
         let center = new Array(this.nrows).fill(0);
         let sigma = new Array(this.nrows + 1).fill().map(() => Array(this.nrows).fill(0));
         let rho = new Array(this.nrows + 1).fill(0);
-        let R = B[0];
+        let R = this.B[0];
 
         tempVector[0] = 1;
 
@@ -315,7 +315,7 @@ class Lattice {
 
             temp = tempVector[k] - center[k];
             temp *= temp;
-            rho[k] = rho[k + 1] + temp * B[k];
+            rho[k] = rho[k + 1] + temp * this.B[k];
             if (rho[k] <= R) {
                 if (k == 0) {
                     R = Math.min(0.99 * rho[0], R);
