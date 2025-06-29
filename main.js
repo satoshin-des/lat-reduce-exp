@@ -337,7 +337,7 @@ class Lattice {
                         r[k] = r[k + 1];
                     }
                     for (let i = r[k]; i > k; --i) {
-                        sigma[i][k] = sigma[i + 1][k] + mu[i][k] * tempVector[i];
+                        sigma[i][k] = sigma[i + 1][k] + this.mu[i][k] * tempVector[i];
                     }
                     center[k] = -sigma[k + 1][k];
                     tempVector[k] = Math.round(center[k]);
